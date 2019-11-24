@@ -54,7 +54,10 @@ def rot(v,x):
 				i-=1
 	return v
 
-def cesarimg(im):
+def cesarimg():
+
+	im = Image.open("im.jpg",'r')
+
 	x = input("Digite o valor desejado: ")
 
 	c1, c2 = im.size
@@ -91,13 +94,6 @@ def DESimg(im):
 def AESimg(im):
 	i = 2
 
-#imagem = Image.open("im.jpg",'r')
-
-#cesarimg(imagem)
-
-#DESimg(imagem)
-
-#AESimg(imagem)
 
 def cesarTexto():
 
@@ -140,9 +136,10 @@ def menu():
         except SyntaxError:
             print 'Saindo do programa...'
             break
-        if n == 4:
+        if n == 1:
+        	cesarimg()
+        elif n == 4:
             cesarTexto()
 
 if __name__ == "__main__":
     menu()
-
