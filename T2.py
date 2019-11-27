@@ -25,6 +25,61 @@ for i in range(len(ascii_code_alfabeto)):
 
 #*************************************************************
 
+
+def trans(pc):
+	b = list("abcdefghijklmnopqrstuvxwyz")
+	cont = 0
+	i = 0
+
+	while(i < 26):
+		if(pc == b[i]):
+			break
+		else:
+			cont+=1
+		i+=1
+	return cont
+
+def trans2(n):
+	l = list("abcdefghijklmnopqrstuvxwyz")
+	
+	j = l[n]
+
+	return j
+
+def ven():
+	chave = raw_input("Digite a Chave para o algoritmo de Vigenere: ")
+	chave = chave.lower()
+	txt = open('texto.txt','r')
+	txt = txt.read()
+	txt = txt.lower()
+	t = list(txt)
+	r = list(chave)
+	x = len(texto)
+	y = len(chave)
+	j = 0
+	o = 0
+	p = 0
+	k = 0
+	f = 0
+	while(j < x):
+		if(t[j] == ' '):
+			c = 0
+		else:
+			p = trans(t[j])
+			k = trans(r[o])
+			#print(t[j], r[o])
+			o+=1
+			f = ((p+k)%26)
+			t[j] = trans2(f)
+			#print(p,k,f, t[j])
+			if(o == y):
+				o = 0
+		j+=1
+	t = ''.join(t)
+	print(t)
+
+#*************************************************************
+
 def rot(v,x):
 	i = 0
 	if(x > 255):
@@ -140,6 +195,8 @@ def menu():
         	cesarimg()
         elif n == 4:
             cesarTexto()
+        elif n == 5:
+        	ven()
 
 if __name__ == "__main__":
     menu()
