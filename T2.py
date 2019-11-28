@@ -170,7 +170,7 @@ def cesarTexto():
         else:
             for j in range(len(ascii_code_alfabeto)):
                 if ascii_code_alfabeto[j] == texto[i]:
-                    cifrado.append(ascii_code_alfabeto[(j-n)%len(ascii_code_alfabeto)])
+                    cifrado.append(ascii_code_alfabeto[(j+n)%len(ascii_code_alfabeto)])
     print 'A seguir o texto cifrado:\n'
     print ''.join(cifrado)
     try:
