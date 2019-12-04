@@ -113,7 +113,7 @@ def cesarimg():
 
 	im = Image.open("im.jpg",'r')
 
-	x = input("Digite o valor desejado: ")
+	x = int(input("Digite o valor desejado: "))
 
 	c1, c2 = im.size
 
@@ -154,12 +154,12 @@ def cesarTexto():
     # loop para usuario digitar numero de deslocamento de cesar
     while True:
         try:
-            n = input('Qual sera o valor do deslocamento?\n')
+            n = int(input('Qual sera o valor do deslocamento?\n'))
             break
         except NameError:
-            print 'Por favor, digite um numero\n'
-    print 'A seguir o texto original:\n'
-    print texto
+            print('Por favor, digite um numero\n')
+    print('A seguir o texto original:\n')
+    print(texto)
 
     # algoritmo de cesar
     cifrado = []
@@ -170,8 +170,8 @@ def cesarTexto():
             for j in range(len(ascii_code_alfabeto)):
                 if ascii_code_alfabeto[j] == texto[i]:
                     cifrado.append(ascii_code_alfabeto[(j+n)%len(ascii_code_alfabeto)])
-    print 'A seguir o texto cifrado:\n'
-    print ''.join(cifrado)
+    print('A seguir o texto cifrado:\n')
+    print(''.join(cifrado))
 
 # ALGORITMO DE DES PRA TEXTO
 
@@ -405,34 +405,37 @@ def DEStexto():
     print("Texto original: ", r2)
     print("Texto cifrado: %r" % r)
 
+def voltar_menu():
+    try:
+        n = int(input('\nPressione ENTER para voltar ao menu\n'))
+    except (ValueError, SyntaxError) as e:
+        pass
+
 def menu():
     while True:
-        print '***************************************************************'
-        print '\nSeja bem vindo ao programa de criptografia de texto e imagens'
-        print '\nA SEGUIR OS ALGORITMOS DISPONIVEIS PARA IMAGEM:\n'
-        print '1) Cesar\n2) DES\n3) AES\n'
-        print 'A SEGUIR OS ALGORITMOS DISPONIVEIS PARA TEXTO:\n'
-        print '4) Cesar\n5) Vigenere\n6) RSA\n7) DAS\n8) SHA-2\n9) Twofish\n10) Serpent\n11) DES\n12) AES\n13) 3DES\n14) Diffie-Helman'
+        print('***************************************************************')
+        print('\nSeja bem vindo ao programa de criptografia de texto e imagens')
+        print('\nA SEGUIR OS ALGORITMOS DISPONIVEIS PARA IMAGEM:\n')
+        print('1) Cesar\n2) DES\n3) AES\n')
+        print('A SEGUIR OS ALGORITMOS DISPONIVEIS PARA TEXTO:\n')
+        print('4) Cesar\n5) Vigenere\n6) RSA\n7) DAS\n8) SHA-2\n9) Twofish\n10) Serpent\n11) DES\n12) AES\n13) 3DES\n14) Diffie-Helman')
         try:
-            n = input('\nPor favor, selecione um algoritmo que voce gostaria de executar: (ENTER para sair)\n')
-        except SyntaxError:
-            print 'Saindo do programa...'
+            n = int(input('\nPor favor, selecione um algoritmo que voce gostaria de executar: (ENTER para sair)\n'))
+        except (ValueError, SyntaxError) as e:
+            print('Saindo do programa...')
             break
         if n == 1:
             cesarimg()
+            voltar_menu()
         elif n == 4:
             cesarTexto()
+            voltar_menu()
         elif n == 5:
             ven()
+            voltar_menu()
         elif n == 11:
             DEStexto()
-        else:
-            print 'Algoritmo nao implementado!'
-
-        try:
-           n = input('\nPressione ENTER para voltar ao menu\n')
-        except SyntaxError:
-            pass
+            voltar_menu()
 
 if __name__ == "__main__":
     menu()
