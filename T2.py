@@ -8,6 +8,7 @@
 
 # bibliotecas usadas no codigo
 from PIL import Image, ImageFilter
+from random import randint
 import numpy
 
 #variaveis globais ******************************************
@@ -142,10 +143,50 @@ def cesarimg():
 	print(pix[0,0])
 	im.show()
 	im.save("cesar2.jpg")
+	im.close()
 
-def DESimg(im):
-	i = 2
+def DESimg():
+	im = Image.open('im.jpg','r')
 
+	arq = open('IV.txt', 'w')
+
+	c1, c2 = im.size
+
+	p1 = []
+	p2 = []
+
+	pix = im.load()
+
+	# Aqui geramos os numeros aleatorios e colocamos no arquivo, sao as primeiras 6400 chaves
+	# A imagem tem 640² pixels e dividos em 64 partes resultando 64 blocos de 6400 pixels cada
+
+	for c in range (6400):
+		x =  randint(0,255)
+		p1.insert(c,x)
+		arq.write(str(x))
+		arq.write(" / ")
+
+	arq.close()
+	o = 0
+	for i in range(c1):
+		for j in range(c2):
+			a, b, c = pix[i,j]
+			ms = (a+b+c)/3
+			zeta = int(ms)^p1[o]
+			e = a^p1[o] 
+			f = b^p1[o]
+			g = c^p1[o]
+			pix[i,j] = e,f,g
+			p1[o] = zeta
+			o+=1
+			if(o == 6400):
+				o = 0
+
+	im.show()
+	im.save("DES.jpg")
+	im.close()
+
+	
 def AESimg(im):
 	i = 2
 
@@ -427,6 +468,9 @@ def menu():
         if n == 1:
             cesarimg()
             voltar_menu()
+        elif n == 2:
+        	DESimg()
+        	voltar_menu()
         elif n == 4:
             cesarTexto()
             voltar_menu()
