@@ -47,7 +47,7 @@ def trans2(n):
 	return j
 
 def ven():
-	chave = raw_input("Digite a Chave para o algoritmo de Vigenere: ")
+	chave = input("Digite a Chave para o algoritmo de Vigenere: ")
 	chave = chave.lower()
 	txt = open('texto.txt','r')
 	txt = txt.read()
