@@ -28,167 +28,178 @@ for i in range(len(ascii_code_alfabeto)):
 
 
 def trans(pc):
-	b = list("abcdefghijklmnopqrstuvxwyz")
-	cont = 0
-	i = 0
+    b = list("abcdefghijklmnopqrstuvxwyz123456789,.")
+    cont = 0
+    i = 0
 
-	while(i < 26):
-		if(pc == b[i]):
-			break
-		else:
-			cont+=1
-		i+=1
-	return cont
+    while(i < 37):
+        if(pc == b[i]):
+            break
+        else:
+            cont+=1
+        i+=1
+    return cont
 
 def trans2(n):
-	l = list("abcdefghijklmnopqrstuvxwyz")
-	
-	j = l[n]
+    l = list("abcdefghijklmnopqrstuvxwyz123456789,.")
+    
+    j = l[n]
 
-	return j
+    return j
 
-def ven():
-	chave = input("Digite a Chave para o algoritmo de Vigenere: ")
-	chave = chave.lower()
-	txt = open('texto.txt','r')
-	txt = txt.read()
-	txt = txt.lower()
-	t = list(txt)
-	r = list(chave)
-	x = len(texto)
-	y = len(chave)
-	j = 0
-	o = 0
-	p = 0
-	k = 0
-	f = 0
-	while(j < x):
-		if(t[j] == ' '):
-			c = 0
-		else:
-			p = trans(t[j])
-			k = trans(r[o])
-			#print(t[j], r[o])
-			o+=1
-			f = ((p+k)%26)
-			t[j] = trans2(f)
-			#print(p,k,f, t[j])
-			if(o == y):
-				o = 0
-		j+=1
-	t = ''.join(t)
-	print(t)
+def ven(olu, chave,tipo):
+    olu = olu.lower()
+    t = list(olu)
+    r = list(chave)
+    x = len(olu)
+    y = len(chave)
+    j = 0
+    o = 0
+    p = 0
+    k = 0
+    f = 0
+    j2 = 0
+    if(tipo == 1):
+        print("CIFRAGEM")
+        while(j < x):
+            if(t[j] == ' '):
+                c = 0
+            else:
+                p = trans(t[j])
+                k = trans(r[o])
+                o+=1
+                f = ((p+k)%37)
+                t[j] = trans2(f)
+                if(o == y):
+                    o = 0
+            j+=1
+    elif(tipo == 2):
+        print("DECIFRAGEM")
+        while(j2 < x):
+            if(t[j2] == ' '):
+                c = 0
+            else:
+                p = trans(t[j2])
+                k = trans(r[o])
+                o+=1
+                f = ((p-k+37)%37)
+                t[j2] = trans2(f)
+                if(o == y):
+                    o = 0
+            j2+=1
+    t = ''.join(t)
+    return t 
 
 #*************************************************************
 
 def rot(v,x):
-	i = 0
-	if(x > 255):
-		while(x > 255):
-			v-=1
-			x-=255
-	elif(x < -255):
-		while(x < -255):
-			v+=1
-			x+=255
-	if(x == 0):
-		return v
-	else:
-		if(x > 0):
-			while(i < x):
-				if((v+1) == 256):
-					v = 0
-				else:
-					v+=1
-				i+=1
-		elif(x < 0):
-			while(i > x):
-				if((v-1) == -1):
-					v = 255
-				elif((v-1)!=-1):
-					v-=1
-				i-=1
-	return v
+    i = 0
+    if(x > 255):
+        while(x > 255):
+            v-=1
+            x-=255
+    elif(x < -255):
+        while(x < -255):
+            v+=1
+            x+=255
+    if(x == 0):
+        return v
+    else:
+        if(x > 0):
+            while(i < x):
+                if((v+1) == 256):
+                    v = 0
+                else:
+                    v+=1
+                i+=1
+        elif(x < 0):
+            while(i > x):
+                if((v-1) == -1):
+                    v = 255
+                elif((v-1)!=-1):
+                    v-=1
+                i-=1
+    return v
 
 def cesarimg():
 
-	im = Image.open("im.jpg",'r')
+    im = Image.open("im.jpg",'r')
 
-	x = int(input("Digite o valor desejado: "))
+    x = int(input("Digite o valor desejado: "))
 
-	c1, c2 = im.size
+    c1, c2 = im.size
 
-	pix = im.load()
+    pix = im.load()
 
-	q, w, r = pix[0,0]
+    q, w, r = pix[0,0]
 
-	e = rot(q,x) 
-	f = rot(w,x)
-	g = rot(r,x)
+    e = rot(q,x) 
+    f = rot(w,x)
+    g = rot(r,x)
 
-	print(pix[0,0])
+    print(pix[0,0])
 
-	for i in range(c1):
-		for j in range(c2):
-			a, b, c = pix[i,j]
-			if((q == a) and (w==b) and (r==c)):
-				pix[i,j] = e,f,g
-			else:
-				e = rot(a,x) 
-				f = rot(b,x)
-				g = rot(c,x)
-				q,w,r = pix[i,j]
-				pix[i,j] = e,f,g
+    for i in range(c1):
+        for j in range(c2):
+            a, b, c = pix[i,j]
+            if((q == a) and (w==b) and (r==c)):
+                pix[i,j] = e,f,g
+            else:
+                e = rot(a,x) 
+                f = rot(b,x)
+                g = rot(c,x)
+                q,w,r = pix[i,j]
+                pix[i,j] = e,f,g
 
-	print(pix[0,0])
-	im.show()
-	im.save("cesar2.jpg")
-	im.close()
+    print(pix[0,0])
+    im.show()
+    im.save("cesar2.jpg")
+    im.close()
 
 def DESimg():
-	im = Image.open('im.jpg','r')
+    im = Image.open('im.jpg','r')
 
-	arq = open('IV.txt', 'w')
+    arq = open('IV.txt', 'w')
 
-	c1, c2 = im.size
+    c1, c2 = im.size
 
-	p1 = []
-	p2 = []
+    p1 = []
+    p2 = []
 
-	pix = im.load()
+    pix = im.load()
 
-	# Aqui geramos os numeros aleatorios e colocamos no arquivo, sao as primeiras 6400 chaves
-	# A imagem tem 640² pixels e dividos em 64 partes resultando 64 blocos de 6400 pixels cada
+    # Aqui geramos os numeros aleatorios e colocamos no arquivo, sao as primeiras 6400 chaves
+    # A imagem tem 640² pixels e dividos em 64 partes resultando 64 blocos de 6400 pixels cada
 
-	for c in range (6400):
-		x =  randint(0,255)
-		p1.insert(c,x)
-		arq.write(str(x))
-		arq.write(" / ")
+    for c in range (6400):
+        x =  randint(0,255)
+        p1.insert(c,x)
+        arq.write(str(x))
+        arq.write(" / ")
 
-	arq.close()
-	o = 0
-	for i in range(c1):
-		for j in range(c2):
-			a, b, c = pix[i,j]
-			ms = (a+b+c)/3
-			zeta = int(ms)^p1[o]
-			e = a^p1[o] 
-			f = b^p1[o]
-			g = c^p1[o]
-			pix[i,j] = e,f,g
-			p1[o] = zeta
-			o+=1
-			if(o == 6400):
-				o = 0
+    arq.close()
+    o = 0
+    for i in range(c1):
+        for j in range(c2):
+            a, b, c = pix[i,j]
+            ms = (a+b+c)/3
+            zeta = int(ms)^p1[o]
+            e = a^p1[o] 
+            f = b^p1[o]
+            g = c^p1[o]
+            pix[i,j] = e,f,g
+            p1[o] = zeta
+            o+=1
+            if(o == 6400):
+                o = 0
 
-	im.show()
-	im.save("DES.jpg")
-	im.close()
+    im.show()
+    im.save("DES.jpg")
+    im.close()
 
-	
+    
 def AESimg(im):
-	i = 2
+    i = 2
 
 def cesarTexto():
 
@@ -469,13 +480,19 @@ def menu():
             cesarimg()
             voltar_menu()
         elif n == 2:
-        	DESimg()
-        	voltar_menu()
+            DESimg()
+            voltar_menu()
         elif n == 4:
             cesarTexto()
             voltar_menu()
         elif n == 5:
-            ven()
+            txt = "Star Wars e uma franquia do tipo space opera criada pelo cineasta George Lucas que conta com uma serie de oito filmes de fantasia cientifica. O primeiro filme foi lancado apenas com o titulo Star Wars em 25 de maio de 1977, e tornou-se um fenomeno mundial"
+            chave = input("Digite a chave: ")
+            b = ven(txt,chave,1)
+            c = ven(b,chave,2)
+
+            print("CIFRADO: \n", b)
+            print("DECIFRADO: \n", c)
             voltar_menu()
         elif n == 11:
             DEStexto()
@@ -514,5 +531,3 @@ new = str(decrypted, 'ISO-8859-1') #Transforma de bytes para string
 print (new == textobase) #Verifica se o texto decodificado é igual ao texto original e retorna True ou False
 print (new) #mostra o texto decifrado
 print ("Tempo de execucao para decodificar ", time.time() - t2) #mostra o tempo gasto para decifrar a mensagem
-
-
