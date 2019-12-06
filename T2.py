@@ -9,6 +9,7 @@
 # bibliotecas usadas no codigo
 from PIL import Image, ImageFilter
 from random import randint
+import time
 import numpy
 
 #variaveis globais ******************************************
@@ -28,11 +29,11 @@ for i in range(len(ascii_code_alfabeto)):
 
 
 def trans(pc):
-    b = list("abcdefghijklmnopqrstuvxwyz123456789,.")
+    b = list("abcdefghijklmnopqrstuvxwyz25197,.-")
     cont = 0
     i = 0
 
-    while(i < 37):
+    while(i < 34):
         if(pc == b[i]):
             break
         else:
@@ -41,7 +42,7 @@ def trans(pc):
     return cont
 
 def trans2(n):
-    l = list("abcdefghijklmnopqrstuvxwyz123456789,.")
+    l = list("abcdefghijklmnopqrstuvxwyz25197,.-")
     
     j = l[n]
 
@@ -68,7 +69,7 @@ def ven(olu, chave,tipo):
                 p = trans(t[j])
                 k = trans(r[o])
                 o+=1
-                f = ((p+k)%37)
+                f = ((p+k)%34)
                 t[j] = trans2(f)
                 if(o == y):
                     o = 0
@@ -82,7 +83,7 @@ def ven(olu, chave,tipo):
                 p = trans(t[j2])
                 k = trans(r[o])
                 o+=1
-                f = ((p-k+37)%37)
+                f = ((p-k+34)%34)
                 t[j2] = trans2(f)
                 if(o == y):
                     o = 0
@@ -90,6 +91,39 @@ def ven(olu, chave,tipo):
     t = ''.join(t)
     return t 
 
+def RSA(olu,tipo):
+    p = 3
+    q = 11
+    n = p*q
+    z = (p-1)*(q-1)
+    e = 7
+    d = 3
+    olu = olu.lower()
+    t = list(olu)
+    x = len(olu)
+    j = 0
+    r = 0
+    i = 0
+    if(tipo == 1):
+        while(j < x):
+            if(t[j] == ' '):
+                c = 0
+            else:
+                m = trans(t[j])
+                r = (m**e)%n
+                t[j] = trans2(r)
+            j+=1
+    else:
+        while(i < x):
+            if(t[i] == ' '):
+                c = 0
+            else:
+                m = trans(t[i])
+                r =((m**d)%n)
+                t[i] = trans2(r)
+            i+=1 
+    t = ''.join(t)
+    return t
 #*************************************************************
 
 def rot(v,x):
@@ -477,25 +511,49 @@ def menu():
             print('Saindo do programa...')
             break
         if n == 1:
+            inicio = time.time()
             cesarimg()
+            fim = time.time()
+            print("\n\nTempo de execucação do algoritmo: ", fim-inicio)
             voltar_menu()
         elif n == 2:
+            inicio = time.time()
             DESimg()
+            fim = time.time()
+            print("\n\nTempo de execucação do algoritmo: ", fim-inicio)
             voltar_menu()
         elif n == 4:
+            inicio = time.time()
             cesarTexto()
+            fim = time.time()
+            print("\n\nTempo de execucação do algoritmo: ", fim-inicio)
             voltar_menu()
         elif n == 5:
             txt = "Star Wars e uma franquia do tipo space opera criada pelo cineasta George Lucas que conta com uma serie de oito filmes de fantasia cientifica. O primeiro filme foi lancado apenas com o titulo Star Wars em 25 de maio de 1977, e tornou-se um fenomeno mundial"
             chave = input("Digite a chave: ")
+            inicio = time.time()
             b = ven(txt,chave,1)
+            fim = time.time()
             c = ven(b,chave,2)
-
-            print("CIFRADO: \n", b)
-            print("DECIFRADO: \n", c)
+            print("CIFRADO: \n______________________________________________\n", b)
+            print("DECIFRADO: \n_______________________________________________\n", c)
+            print("\n\nTempo de execucação do algoritmo: ", fim-inicio)
             voltar_menu()
+        elif n == 6:
+            inicio = time.time()
+            txt = "Star Wars e uma franquia do tipo space opera criada pelo cineasta George Lucas que conta com uma serie de oito filmes de fantasia cientifica. O primeiro filme foi lancado apenas com o titulo Star Wars em 25 de maio de 1977, e tornou-se um fenomeno mundial"
+            ci = RSA(txt,1)
+            fim = time.time()
+            de = RSA(ci,2)
+
+            print("CIFRADO: \n\n", ci)
+            print("DECIFRADO: \n\n", de)
+            print("\n\nTempo de execucação do algoritmo: ", fim-inicio)
         elif n == 11:
+            inicio = time.time()
             DEStexto()
+            fim = time.time()
+            print("\n\nTempo de execucação do algoritmo: ", fim-inicio)
             voltar_menu()
 
 if __name__ == "__main__":
