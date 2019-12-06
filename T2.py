@@ -3,6 +3,8 @@
 # JOAO VITOR FONSECA DE LIMA 17/0014118
 # TRABALHO 2 FUNDAMENTOS DE REDES 2
 
+# USE O PYTHON 3 PARA RODAR ESSE CODIGO
+
 # o codigo a seguir foi feito sob o efeito de muita pressao e cafeina
 # nao recomendo mexer em nada, so deus sabe como isso tudo aqui funciona
 
@@ -11,8 +13,10 @@ from PIL import Image, ImageFilter
 from random import randint
 import time
 import numpy
+import pyaes
 
 #variaveis globais ******************************************
+global texto
 texto = open('texto.txt', 'r') # sample de texto do star wars
 texto = texto.read()
 
@@ -26,7 +30,6 @@ for i in range(len(ascii_code_alfabeto)):
     dict_alfabeto[ascii_code_alfabeto[i]] = ord(ascii_code_alfabeto[i])
 
 #*************************************************************
-
 
 def trans(pc):
     b = list("abcdefghijklmnopqrstuvxwyz25197,.-")
@@ -203,7 +206,7 @@ def DESimg():
     pix = im.load()
 
     # Aqui geramos os numeros aleatorios e colocamos no arquivo, sao as primeiras 6400 chaves
-    # A imagem tem 640² pixels e dividos em 64 partes resultando 64 blocos de 6400 pixels cada
+    # A imagem tem 640^2 pixels e dividos em 64 partes resultando 64 blocos de 6400 pixels cada
 
     for c in range (6400):
         x =  randint(0,255)
@@ -259,7 +262,7 @@ def cesarTexto():
     print('A seguir o texto cifrado:\n')
     print(''.join(cifrado))
 
-# ALGORITMO DE DES PRA TEXTO
+# ALGORITMO DE DES PRA TEXTO ********************************************************************
 
 PI = [58, 50, 42, 34, 26, 18, 10, 2,
       60, 52, 44, 36, 28, 20, 12, 4,
@@ -483,13 +486,46 @@ class des():
 
 def DEStexto():
     key = "secret_k"
-    text= "Star Wars e uma franquia do tipo space opera criada pelo cineasta George Lucas que conta com uma serie de oito filmes de fantasia cientifica. O primeiro filme foi lancado apenas com o titulo Star Wars em 25 de maio de 1977, e tornou-se um fenomeno mundial."
     d = des()
-    r = d.encrypt(key,text)
+    r = d.encrypt(key,"Star Wars e uma franquia do tipo space opera criada pelo cineasta George Lucas que conta com uma serie de oito filmes de fantasia cientifica. O primeiro filme foi lancado apenas com o titulo Star Wars em 25 de maio de 1977, e tornou-se um fenomeno mundial.")
     r2 = d.decrypt(key,r)
 
-    print("Texto original: ", r2)
-    print("Texto cifrado: %r" % r)
+    print("\nTEXTO ORIGINAL\n", r2)
+    print("\nTEXTO CIFRADO:\n %r" % r)
+
+# FIM DO ALGORITMO DE DES PRA TEXTO ****************************************************************
+
+def AEStexto():
+
+    chave = "a72 jds cnh asf r99 xx7 32s hfn!" # Uma chave aleatoria de 256 bit (32 bytes)
+
+    texto = open('texto.txt', 'r') # sample de texto do star wars
+    texto = texto.read()
+
+    t1 = time.time() #inicia a contagem do tempo para encriptar a mensagem 
+
+    chave = bytes(chave,'utf-8') # Convertendo a chave em Bytes
+
+    aes = pyaes.AESModeOfOperationCTR(chave) #operacao no modo CTR de criptografia
+    textocifrado = aes.encrypt(texto) #processo de criptografia 
+
+    print("\nTexto Cifrado:")
+    print (textocifrado) # Mostra o texto encriptado
+
+    print ("\nTempo de execucao para encriptar:", time.time() - t1, "segundos\n") #mostra o tempo gasto para encriptar a mensagem
+
+    t2 = time.time() #inicia a contagem do tempo para decifrar a mensagem 
+
+    # DECODIFICACAO
+    aes = pyaes.AESModeOfOperationCTR(chave) #operacao no modo CTR de criptografia
+
+    decrypted = aes.decrypt(textocifrado)# O conteudo decodificado eh binario, precisamos decodificar para texto
+
+    new = str(decrypted, 'ISO-8859-1') #Transforma de bytes para string
+
+    print('Texto Decifrado:')
+    print (new) #mostra o texto decifrado
+    print ("Tempo de execucao para decodificar ", time.time() - t2) #mostra o tempo gasto para decifrar a mensagem
 
 def voltar_menu():
     try:
@@ -514,19 +550,19 @@ def menu():
             inicio = time.time()
             cesarimg()
             fim = time.time()
-            print("\n\nTempo de execucação do algoritmo: ", fim-inicio)
+            print("\n\nTempo de execucao do algoritmo: ", fim-inicio)
             voltar_menu()
         elif n == 2:
             inicio = time.time()
             DESimg()
             fim = time.time()
-            print("\n\nTempo de execucação do algoritmo: ", fim-inicio)
+            print("\n\nTempo de execucacao do algoritmo: ", fim-inicio)
             voltar_menu()
         elif n == 4:
             inicio = time.time()
             cesarTexto()
             fim = time.time()
-            print("\n\nTempo de execucação do algoritmo: ", fim-inicio)
+            print("\n\nTempo de execucacao do algoritmo: ", fim-inicio)
             voltar_menu()
         elif n == 5:
             txt = "Star Wars e uma franquia do tipo space opera criada pelo cineasta George Lucas que conta com uma serie de oito filmes de fantasia cientifica. O primeiro filme foi lancado apenas com o titulo Star Wars em 25 de maio de 1977, e tornou-se um fenomeno mundial"
@@ -535,9 +571,9 @@ def menu():
             b = ven(txt,chave,1)
             fim = time.time()
             c = ven(b,chave,2)
-            print("CIFRADO: \n______________________________________________\n", b)
-            print("DECIFRADO: \n_______________________________________________\n", c)
-            print("\n\nTempo de execucação do algoritmo: ", fim-inicio)
+            print("\nCIFRADO: ______________________________________________\n", b)
+            print("\nDECIFRADO: _______________________________________________\n", c)
+            print("\n\nTempo de execucacao do algoritmo: ", fim-inicio)
             voltar_menu()
         elif n == 6:
             inicio = time.time()
@@ -545,47 +581,26 @@ def menu():
             ci = RSA(txt,1)
             fim = time.time()
             de = RSA(ci,2)
+            print("\nCIFRADO: \n", ci)
+            print("\nDECIFRADO: \n", de)
+            print("\n\nTempo de execucacao do algoritmo: ", fim-inicio)
+            voltar_menu()
 
-            print("CIFRADO: \n\n", ci)
-            print("DECIFRADO: \n\n", de)
-            print("\n\nTempo de execucação do algoritmo: ", fim-inicio)
         elif n == 11:
             inicio = time.time()
             DEStexto()
             fim = time.time()
-            print("\n\nTempo de execucação do algoritmo: ", fim-inicio)
+            print("\n\nTempo de execucacao do algoritmo: ", fim-inicio)
             voltar_menu()
+
+        elif n == 12:
+            inicio = time.time()
+            AEStexto()
+            fim = time.time()
+            print("\n\nTempo de execucacao do algoritmo: ", fim-inicio)
+            voltar_menu()
+
 
 if __name__ == "__main__":
     menu()
 
-#algoritmo AES para texto
-import pyaes
-import time
-
-chave = "a72 jds cnh asf r99 xx7 32s hfn!" # Uma chave aleatória de 256 bit (32 bytes)
-textobase = "Star Wars é uma franquia do tipo space opera criada pelo cineasta George Lucas que conta com uma série de oito filmes de fantasia científica. O primeiro filme foi lançado apenas com o título Star Wars em 25 de maio de 1977, e tornou-se um fenômeno mundial."
-
-t1 = time.time() #inicia a contagem do tempo para encriptar a mensagem 
-
-chave = bytes(chave,'utf-8') # Convertendo a chave em Bytes
-
-aes = pyaes.AESModeOfOperationCTR(chave) #operacao no modo CTR de criptografia
-textocifrado = aes.encrypt(textobase) #processo de criptografia 
-
-print (textocifrado) # Mostra o texto encriptado
-
-print ("Tempo de execucao para encriptar:", time.time() - t1, "segundos") #mostra o tempo gasto para encriptar a mensagem
-
-t2 = time.time() #inicia a contagem do tempo para decifrar a mensagem 
-
-# DECODIFICACAO
-aes = pyaes.AESModeOfOperationCTR(chave) #operacao no modo CTR de criptografia
-
-decrypted = aes.decrypt(textocifrado)# O conteudo decodificado é binário, precisamos decodificar para texto
-
-new = str(decrypted, 'ISO-8859-1') #Transforma de bytes para string
-
-print (new == textobase) #Verifica se o texto decodificado é igual ao texto original e retorna True ou False
-print (new) #mostra o texto decifrado
-print ("Tempo de execucao para decodificar ", time.time() - t2) #mostra o tempo gasto para decifrar a mensagem
