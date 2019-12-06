@@ -483,3 +483,36 @@ def menu():
 
 if __name__ == "__main__":
     menu()
+
+#algoritmo AES para texto
+import pyaes
+import time
+
+chave = "a72 jds cnh asf r99 xx7 32s hfn!" # Uma chave aleatória de 256 bit (32 bytes)
+textobase = "Star Wars é uma franquia do tipo space opera criada pelo cineasta George Lucas que conta com uma série de oito filmes de fantasia científica. O primeiro filme foi lançado apenas com o título Star Wars em 25 de maio de 1977, e tornou-se um fenômeno mundial."
+
+t1 = time.time() #inicia a contagem do tempo para encriptar a mensagem 
+
+chave = bytes(chave,'utf-8') # Convertendo a chave em Bytes
+
+aes = pyaes.AESModeOfOperationCTR(chave) #operacao no modo CTR de criptografia
+textocifrado = aes.encrypt(textobase) #processo de criptografia 
+
+print (textocifrado) # Mostra o texto encriptado
+
+print ("Tempo de execucao para encriptar:", time.time() - t1, "segundos") #mostra o tempo gasto para encriptar a mensagem
+
+t2 = time.time() #inicia a contagem do tempo para decifrar a mensagem 
+
+# DECODIFICACAO
+aes = pyaes.AESModeOfOperationCTR(chave) #operacao no modo CTR de criptografia
+
+decrypted = aes.decrypt(textocifrado)# O conteudo decodificado é binário, precisamos decodificar para texto
+
+new = str(decrypted, 'ISO-8859-1') #Transforma de bytes para string
+
+print (new == textobase) #Verifica se o texto decodificado é igual ao texto original e retorna True ou False
+print (new) #mostra o texto decifrado
+print ("Tempo de execucao para decodificar ", time.time() - t2) #mostra o tempo gasto para decifrar a mensagem
+
+
